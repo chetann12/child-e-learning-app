@@ -70,8 +70,7 @@ class _ProfileTabState extends State<ProfileTab> {
         children: [
           const CircleAvatar(
             radius: 60,
-            backgroundImage: AssetImage(
-                'assets/images/profile.jpeg'), // 👶 Add a cute profile image here!
+            backgroundImage: AssetImage('assets/images/profile.jpeg'),
           ),
           const SizedBox(height: 20),
           const Text(

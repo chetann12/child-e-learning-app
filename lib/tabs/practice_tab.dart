@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import '../theme/colors.dart';
 
-class PracticeTab extends StatelessWidget {
+class PracticeTab extends StatefulWidget {
   const PracticeTab({super.key});
+
+  @override
+  State<PracticeTab> createState() => _PracticeTabState();
+}
+
+class _PracticeTabState extends State<PracticeTab> {
+  final FlutterTts flutterTts = FlutterTts();
 
   final List<String> letters = const [
     'A',
@@ -47,6 +55,19 @@ class PracticeTab extends StatelessWidget {
   ];
 
   @override
+  void dispose() {
+    flutterTts.stop();
+    super.dispose();
+  }
+
+  Future<void> _speak(String text) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.speak(text);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
@@ -64,8 +85,8 @@ class PracticeTab extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                _buildGrid(context, letters, isLetter: true),
-                _buildGrid(context, numbers, isLetter: false),
+                _buildGrid(context, letters),
+                _buildGrid(context, numbers),
               ],
             ),
           ),
@@ -74,8 +95,7 @@ class PracticeTab extends StatelessWidget {
     );
   }
 
-  Widget _buildGrid(BuildContext context, List<String> items,
-      {required bool isLetter}) {
+  Widget _buildGrid(BuildContext context, List<String> items) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: GridView.builder(
@@ -92,6 +112,7 @@ class PracticeTab extends StatelessWidget {
 
           return InkWell(
             onTap: () {
+              _speak(item);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text("You tapped on '$item'"),
